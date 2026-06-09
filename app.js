@@ -1,113 +1,176 @@
-
-// Create Server
-// const http = require('http');
-
-// http.createServer (function(req,res)
-// {
-//     res.write('Hello from Node Server')
-//     res.end()
-// }).listen(4000,()=> console.log('Server running at http://localhost:4000'));
-
-// Json Method
-// const http = require("http");
-
-// http.createServer((req, res) => {
-//   res.writeHead(200, { "Content-Type": "application/json" });
-
-//   res.end(JSON.stringify({
-//     name: "Mariselvam",
-//     role: "Node.js Developer"
-//   }));
-// }).listen(3000);
-
-// Multiple Route
-// const http = require("http");
-
-// http.createServer((req, res) => {
-
-//   if (req.url === "/") {
-//     res.end("Home Page");
-//   } 
-//   else if (req.url === "/about") {
-//     res.end("About Page");
-//   } 
-//   else {
-//     res.end("404 Not Found");
-//   }
-
-// }).listen(3000);
-
-// Send HTML Response
-// const http = require('http');
-
-// http.createServer((req, res) => {
-//   res.writeHead(200, { "Content-Type": "text/html" });
-
-//   res.write("<h1>Hello Sara</h1>");
-//   res.write("<p>This is an HTML response!</p>");
-
-//   res.end();
-// }).listen(3000);
-
-// const http = require("http");
-// const fs = require("fs");
-
-// const server = http.createServer((req, res) => {
-
-//     if (req.url === "/" && req.method === "GET") {
-//         fs.readFile("form.html", (err, data) => {
-//             if (err) {
-//                 res.writeHead(500, { "Content-Type": "text/plain" });
-//                 res.end("Error loading file");
-//             } else {
-//                 res.writeHead(200, { "Content-Type": "text/html" });
-//                 res.end(data);
-//             }
-//         });
-//     }
-
-//     else if (req.url === "/submit" && req.method === "POST") {
-//         res.writeHead(200, { "Content-Type": "text/html" });
-//         res.end("<h2>Form Submitted Successfully</h2>");
-//     }
-
-//     else {
-//         res.writeHead(404, { "Content-Type": "text/plain" });
-//         res.end("Page Not Found");
-//     }
-// });
-
-// server.listen(3000, () => {
-//     console.log("Server running at http://localhost:3000");
-// });
-
-const http = require("http");
+const express = require("express");
 const fs = require("fs");
+const path = require("path");
 
-const server = http.createServer((req, res) => {
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-    // Serve HTML
-    if (req.url === "/" || req.url === "/form.html") {
-        fs.readFile("form.html", (err, data) => {
-            res.writeHead(200, { "Content-Type": "text/html" });
-            res.end(data);
-        });
-    }
+// MIDDLEWARE
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static("public"));
 
-    // Serve Image
-    else if (req.url === "/R.jpeg") {
-        fs.readFile("R.jpeg", (err, data) => {
-            res.writeHead(200, { "Content-Type": "image/jpeg" });
-            res.end(data);
-        });
-    }
+// HELPER FUNCTIONS
+function readData(filePath) {
+  try {
+    return JSON.parse(fs.readFileSync(filePath, "utf8"));
+  } catch {
+    return [];
+  }
+}
 
-    else {
-        res.writeHead(404);
-        res.end("Not Found");
-    }
+function writeData(filePath, data) {
+  fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+}
+
+// HOME ROUTE
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-server.listen(3000, () => {
-    console.log("Server running at http://localhost:3000");
+// ADMIN LOGIN
+app.post("/admin/login", (req, res) => {
+  const { username, password } = req.body;
+
+  const admin = {
+    username: "Mari",
+    password: "4498"
+  };
+
+  if (
+    username === admin.username &&
+    password === admin.password
+  ) {
+    res.send("success");
+  } else {
+    res.status(401).send("fail");
+  }
+});
+
+// PRODUCTS
+// GET ALL PRODUCTS
+app.get("/products", (req, res) => {
+  const products = readData("data/products.json");
+  res.json(products);
+});
+
+// ADD PRODUCT
+app.post("/products", (req, res) => {
+  const products = readData("data/products.json");
+
+  const newProduct = {
+    id: Date.now(),
+    name: req.body.name,
+    image: req.body.image,
+    price: Number(req.body.price),
+    qty: Number(req.body.qty || 1)
+  };
+
+  products.push(newProduct);
+
+  writeData("data/products.json", products);
+
+  res.json({
+    message: "Product Added Successfully"
+  });
+});
+
+// CART
+
+// GET CART ITEMS
+app.get("/cart", (req, res) => {
+  const cart = readData("data/cart.json");
+  res.json(cart);
+});
+
+// ADD TO CART
+app.post("/cart", (req, res) => {
+  const cart = readData("data/cart.json");
+  const item = req.body;
+
+  const existing = cart.find(
+    p => p.id === item.id
+  );
+
+  if (existing) {
+    existing.qty += 1;
+  } else {
+    item.qty = 1;
+    cart.push(item);
+  }
+
+  writeData("data/cart.json", cart);
+
+  res.json({
+    message: "Added To Cart"
+  });
+});
+
+// UPDATE QTY
+app.put("/cart/:id", (req, res) => {
+  const cart = readData("data/cart.json");
+
+  cart.forEach(item => {
+    if (
+      item.id == req.params.id &&
+      req.body.qty > 0
+    ) {
+      item.qty = req.body.qty;
+    }
+  });
+
+  writeData("data/cart.json", cart);
+
+  res.json({
+    message: "Quantity Updated"
+  });
+});
+
+// DELETE ITEM
+app.delete("/cart/:id", (req, res) => {
+  let cart = readData("data/cart.json");
+
+  cart = cart.filter(
+    item => item.id != req.params.id
+  );
+
+  writeData("data/cart.json", cart);
+
+  res.json({
+    message: "Item Removed"
+  });
+});
+
+// CHECKOUT
+app.post("/checkout", (req, res) => {
+  const cart = readData("data/cart.json");
+  const orders = readData("data/orders.json");
+
+  const order = {
+    orderId: Date.now(),
+    items: cart,
+    orderDate: new Date().toLocaleString()
+  };
+
+  orders.push(order);
+
+  writeData("data/orders.json", orders);
+
+  // Clear cart
+  writeData("data/cart.json", []);
+
+  res.json({
+    message: "Order Placed Successfully"
+  });
+});
+// GET ORDERS
+app.get("/orders", (req, res) => {
+  const orders = readData("data/orders.json");
+  res.json(orders);
+});
+// SERVER
+app.listen(PORT, () => {
+  console.log(
+    `Server Running: http://localhost:${PORT}`
+  );
 });

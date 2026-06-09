@@ -6,10 +6,10 @@
   "license": "ISC",
   "author": "mari",
   "type": "commonjs",
-  "main": "intex.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node app.js"
   },
   "dependencies": {
     "axios": "^1.13.2",

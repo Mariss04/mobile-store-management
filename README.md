@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Mobile Store Management System
 
 ## Overview
@@ -47,3 +48,5 @@ http://localhost:3000
 ## Author
 
 Mariselvam S
+=======
+README.md

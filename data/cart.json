@@ -1,1 +1,9 @@
-[]
+[
+  {
+    "id": 1767603711568,
+    "name": "iPhone 13",
+    "image": "https://github.com/alibabacloud-howto/solution-mongodb-labs/raw/main/e-commerce-application/images/iphone-13-family-select-2021.jpeg",
+    "price": 70000,
+    "qty": 1
+  }
+]
