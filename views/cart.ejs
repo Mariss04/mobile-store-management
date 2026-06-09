@@ -1,0 +1,19 @@
+<% layout('layout') %>
+
+<h2>Your Cart</h2>
+
+<% let total = 0; %>
+
+<% cart.forEach(item => { %>
+  <div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
+    <strong><%= item.name %></strong><br>
+    Price: $<%= item.price %>
+  </div>
+  <% total += Number(item.price); %>
+<% }) %>
+
+<h3>Total: $<%= total %></h3>
+
+<a href="/checkout">
+  <button>Process to checkout</button>
+</a>

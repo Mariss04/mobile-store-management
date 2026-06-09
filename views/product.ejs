@@ -1,0 +1,16 @@
+<% layout('layout') %>
+
+<h2><%= product.name %></h2>
+
+<img src="<%= product.image %>" width="250"><br><br>
+
+<p>This will be the product description</p>
+
+<h3>$<%= product.price %></h3>
+
+<form action="/addcart" method="POST">
+  <input type="hidden" name="id" value="<%= product.id %>">
+  <input type="hidden" name="name" value="<%= product.name %>">
+  <input type="hidden" name="price" value="<%= product.price %>">
+  <button>Add to cart</button>
+</form>

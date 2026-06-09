@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-box {
+      background: #fff;
+      padding: 30px;
+      width: 340px;
+      border-radius: 12px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+    }
+
+    .login-box h2 {
+      text-align: center;
+      margin-bottom: 22px;
+      color: #333;
+    }
+
+    .login-box input {
+      width: 100%;
+      padding: 11px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      transition: border-color 0.3s;
+    }
+
+    .login-box input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .login-box button {
+      width: 100%;
+      padding: 11px;
+      background: #667eea;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .login-box button:hover:enabled {
+      background: #5a67d8;
+    }
+
+    .login-box button:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    #msg {
+      text-align: center;
+      margin-top: 12px;
+      font-size: 14px;
+      color: red;
+      min-height: 18px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="login-box">
+  <h2>Admin Login</h2>
+
+  <form id="loginForm">
+    <input type="text" id="username" placeholder="Username" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <button type="submit" id="loginBtn">Login</button>
+  </form>
+
+  <p id="msg"></p>
+</div>
+
+<script>
+const form = document.getElementById("loginForm");
+const msg = document.getElementById("msg");
+const btn = document.getElementById("loginBtn");
+
+form.addEventListener("submit", async function (e) {
+  e.preventDefault();
+  msg.innerText = "";
+  btn.disabled = true;
+
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
+
+  try {
+    const res = await fetch("/admin/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password })
+    });
+
+    const result = await res.text();
+
+    if (result === "success") {
+      localStorage.setItem("adminLoggedIn", "true");
+      window.location.href = "/index.html";
+    } else {
+      msg.innerText = "Invalid Admin Login";
+      btn.disabled = false;
+    }
+  } catch (err) {
+    msg.innerText = "Server not reachable";
+    btn.disabled = false;
+  }
+});
+</script>
+
+</body>
+</html>

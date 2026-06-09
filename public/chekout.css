@@ -1,0 +1,44 @@
+.card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 15px;
+  width: 250px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  margin: 15px auto;
+  text-align: center;
+}
+
+.card h4 {
+  margin: 10px 0;
+}
+
+.qty {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.qty button {
+  padding: 4px 10px;
+  font-size: 16px;
+}
+
+.remove-btn {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.checkout-btn {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 10px 20px;
+  background: #198754;
+  color: white;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+}

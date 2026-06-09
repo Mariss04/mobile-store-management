@@ -1,0 +1,15 @@
+<% layout('layout') %>
+
+<h2>Fill Up The Shipping Details</h2>
+
+<form method="POST" action="/placeorder">
+  <input name="name" placeholder="Full Name" required><br><br>
+  <input name="phone" placeholder="Phone Number" required><br><br>
+  <input name="address" placeholder="Address" required><br><br>
+  <input name="city" placeholder="City" required><br><br>
+  <input name="pincode" placeholder="Pincode" required><br><br>
+
+  <p>Payment Method: <b>COD</b></p>
+
+  <button>Place order</button>
+</form>

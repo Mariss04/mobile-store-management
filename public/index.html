@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mobile Store</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: #f5f6fa;
+    }
+
+    /* NAVBAR */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 28px;
+      background: linear-gradient(135deg, #0d6efd, #0b5ed7);
+      color: white;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      margin-left: 15px;
+      font-size: 15px;
+    }
+
+    /* ADMIN ICON BUTTON */
+    .admin-area a {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-left: 15px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.15);
+      color: white;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .admin-area a:hover {
+      background: rgba(255,255,255,0.25);
+    }
+
+    .admin-icon {
+      font-size: 16px;
+    }
+
+    /* PAGE TITLE */
+    .title {
+      text-align: center;
+      margin-top: 25px;
+      font-size: 26px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #555;
+      margin-bottom: 30px;
+    }
+
+    /* PRODUCTS GRID */
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      padding: 0 30px 40px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    /* PRODUCT CARD */
+    .card {
+      background: #ffffff;
+      padding: 16px;
+      border-radius: 14px;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+      transition: transform 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card img {
+      width: 100%;
+      height: 160px;
+      object-fit: contain;
+      margin-bottom: 10px;
+    }
+
+    .card h4 {
+      margin: 8px 0;
+      font-size: 17px;
+    }
+
+    .price {
+      color: #0d6efd;
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    .add-btn {
+      padding: 10px 18px;
+      background: linear-gradient(135deg, #198754, #157347);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .add-btn:hover {
+      background: linear-gradient(135deg, #157347, #146c43);
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+  <div class="logo">🛒 M$$ Store</div>
+
+  <div class="nav-links">
+    <a href="/index.html">Home</a>
+    <a href="/cart.html">Cart</a>
+    <a href="/add-product.html">Add Products</a>
+    <span id="adminLinks" class="admin-area"></span>
+  </div>
+</div>
+
+<!-- PAGE CONTENT -->
+<h2 class="title">M$$ Store</h2>
+<p class="subtitle">Welcome to the Mobile world...</p>
+
+<div id="products" class="products"></div>
+
+<script>
+
+// ADMIN NAVBAR LOGIC
+const adminLinks = document.getElementById("adminLinks");
+
+function renderNavbar() {
+  const isAdmin = localStorage.getItem("adminLoggedIn");
+
+  if (isAdmin === "true") {
+    adminLinks.innerHTML = `
+      <a href="#" onclick="logout()">
+        <span class="fa-solid fa-right-from-bracket"></span> Logout
+      </a>
+    `;
+  } else {
+    adminLinks.innerHTML = `
+      <a href="/admin-login.html">
+        <span class="fa-solid fa-user"></span> Admin Login
+      </a>
+    `;
+  }
+}
+
+renderNavbar();
+
+function logout() {
+  localStorage.removeItem("adminLoggedIn");
+  renderNavbar();
+  window.location.href = "/index.html";
+}
+
+// LOAD PRODUCTS
+async function loadProducts() {
+  try {
+    const res = await fetch("/products");
+    const products = await res.json();
+
+    const div = document.getElementById("products");
+    div.innerHTML = "";
+
+    if (!products || products.length === 0) {
+      div.innerHTML =
+        "<p style='text-align:center;'>No products available</p>";
+      return;
+    }
+
+    products.forEach(p => {
+      div.innerHTML += `
+        <div class="card">
+          <img src="${p.image}" alt="${p.name}">
+          <h4>${p.name}</h4>
+          <p class="price">$${p.price}</p>
+          <button class="add-btn"
+            onclick='addToCart(${JSON.stringify(p)})'>
+            Add to Cart
+          </button>
+        </div>
+      `;
+    });
+  } catch {
+    alert("Failed to load products");
+  }
+}
+
+loadProducts();
+
+// ADD TO CART
+function addToCart(product) {
+  fetch("/cart", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(product)
+  })
+  .then(() => {
+    window.location.href = "/cart.html";
+  })
+  .catch(() => alert("Error adding to cart"));
+}
+</script>
+
+</body>
+</html>

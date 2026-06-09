@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>User Login</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<!-- 
+<div class="navbar">
+  <div class="logo">🛒 MyStore</div>
+  <div class="nav-links">
+    <a href="/index.html">Home</a>
+  </div>
+</div> -->
+<div class="navbar">
+  <div class="logo">🛒 M$$ Store</div>
+  <div class="nav-links">
+    <a href="/index.html">Home</a>
+    <a href="/cart.html">Cart</a>
+    <a href="/add-product.html">Add Product</a>
+    <span id="adminLinks"></span>
+  </div>
+</div>
+
+<h2>User Login</h2>
+
+<form id="userForm">
+  <input id="username" placeholder="Username" required><br><br>
+  <input id="password" type="password" placeholder="Password" required><br><br>
+  <button>Login</button>
+</form>
+
+<p id="msg" style="color:red;"></p>
+
+<script>
+document.getElementById("userForm").addEventListener("submit", e => {
+  e.preventDefault();
+
+  fetch("/user/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      username: username.value,
+      password: password.value
+    })
+  })
+  .then(res => res.text())
+  .then(result => {
+    if (result === "success") {
+      localStorage.setItem("userLoggedIn", username.value);
+      location.href = "/index.html";
+    } else {
+      msg.innerText = "Invalid user login";
+    }
+  });
+});
+</script>
+
+</body>
+</html>

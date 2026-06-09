@@ -1,0 +1,23 @@
+<% layout('layout') %>
+
+<h2>Welcome to MyStore</h2>
+
+<div style="display:flex; gap:30px;">
+  <% products.forEach(p => { %>
+    <div style="border:1px solid #ccc; padding:10px; width:200px;">
+      <img src="<%= p.image %>" width="150"><br><br>
+      <strong><%= p.name %></strong><br>
+      $<%= p.price %><br><br>
+
+      <form action="/addcart" method="POST">
+        <input type="hidden" name="id" value="<%= p.id %>">
+        <input type="hidden" name="name" value="<%= p.name %>">
+        <input type="hidden" name="price" value="<%= p.price %>">
+        <button>Add to cart</button>
+      </form>
+
+      <br>
+      <a href="/product/<%= p.id %>">View Details</a>
+    </div>
+  <% }) %>
+</div>

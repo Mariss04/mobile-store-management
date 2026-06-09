@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Order Placed</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: #f5f6fa;
+    }
+
+    /* NAVBAR */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 28px;
+      background: linear-gradient(135deg, #0d6efd, #0b5ed7);
+      color: white;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      margin-left: 15px;
+      font-size: 15px;
+    }
+
+    /* SUCCESS BOX */
+    .success-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: calc(100vh - 70px);
+    }
+
+    .success-box {
+      background: #ffffff;
+      padding: 40px;
+      width: 360px;
+      text-align: center;
+      border-radius: 16px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+      animation: pop 0.5s ease-in-out;
+    }
+
+    @keyframes pop {
+      from {
+        transform: scale(0.9);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .check {
+      font-size: 60px;
+      color: #198754;
+      margin-bottom: 10px;
+    }
+
+    .success-box h2 {
+      margin: 10px 0;
+      color: #198754;
+    }
+
+    .success-box p {
+      color: #555;
+      margin-bottom: 25px;
+    }
+
+    .success-box a {
+      display: inline-block;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #198754, #157347);
+      color: white;
+      text-decoration: none;
+      border-radius: 10px;
+      font-size: 15px;
+      transition: background 0.3s;
+    }
+
+    .success-box a:hover {
+      background: linear-gradient(135deg, #157347, #146c43);
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+  <div class="logo">🛒 M$$ Store</div>
+  <div class="nav-links">
+    <a href="/index.html">Home</a>
+    <a href="/cart.html">Cart</a>
+  </div>
+</div>
+
+<!-- SUCCESS MESSAGE -->
+<div class="success-container">
+  <div class="success-box">
+    <div class="check">✔</div>
+    <h2>Order Placed Successfully!</h2>
+    <p>Thank you for shopping with <b>M$$ Store</b>.<br>
+       Your order will be delivered soon.</p>
+
+    <a href="/index.html">Continue Shopping</a>
+  </div>
+</div>
+
+</body>
+</html>

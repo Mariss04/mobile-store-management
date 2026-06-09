@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cart</title>
+</head>
+<body style="margin:0; font-family:Arial, Helvetica, sans-serif; background:#f5f6fa;">
+
+<!-- NAVBAR -->
+<div style="
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px 28px;
+  background:linear-gradient(135deg,#0d6efd,#0b5ed7);
+  color:white;
+">
+  <div style="font-size:22px; font-weight:bold;">🛒 M$$ Store</div>
+
+  <div style="display:flex; gap:18px; align-items:center;">
+    <a href="/index.html" style="color:white; text-decoration:none;">
+      Home
+    </a>
+    <span id="adminLinks"></span>
+  </div>
+</div>
+
+
+<h2 style="text-align:center; margin-top:20px;">Your Cart</h2>
+
+<div id="cart"></div>
+<div id="total"></div>
+
+<div style="text-align:center;">
+  <a href="/checkout.html" style="
+    display:inline-block;
+    margin:20px auto 40px;
+    padding:14px 26px;
+    font-size:16px;
+    background:linear-gradient(135deg,#198754,#157347);
+    color:white;
+    text-decoration:none;
+    border-radius:10px;
+  ">
+    Proceed to Checkout
+  </a>
+</div>
+
+<script>
+// ADMIN NAVBAR
+const adminLinks = document.getElementById("adminLinks");
+const isAdmin = localStorage.getItem("adminLoggedIn");
+
+adminLinks.innerHTML = isAdmin === "true"
+  ? `<a href="#" onclick="logout()" style="color:white; text-decoration:none;">
+       Logout
+     </a>`
+  : `<a href="/admin-login.html" style="color:white; text-decoration:none;">
+       Admin Login
+     </a>`;
+
+function logout() {
+  localStorage.removeItem("adminLoggedIn");
+  location.href = "/index.html";
+}
+
+// LOAD CART
+async function loadCart() {
+  try {
+    const res = await fetch("/cart");
+    const items = await res.json();
+
+    const div = document.getElementById("cart");
+    let total = 0;
+    div.innerHTML = "";
+
+    if (!items || items.length === 0) {
+      div.innerHTML = `
+        <p style="text-align:center; margin-top:40px;">
+          Cart is empty
+        </p>`;
+      document.getElementById("total").innerHTML = "";
+      return;
+    }
+
+    items.forEach(p => {
+      total += p.price * p.qty;
+
+      div.innerHTML += `
+        <div style="
+          display:flex;
+          gap:16px;
+          background:#ffffff;
+          max-width:720px;
+          margin:14px auto;
+          padding:16px;
+          border-radius:14px;
+          box-shadow:0 8px 20px rgba(0,0,0,0.12);
+        ">
+
+          <div>
+            <img src="${p.image}" alt="${p.name}" style="
+              width:120px;
+              border-radius:10px;
+              object-fit:contain;
+            ">
+          </div>
+
+          <div style="flex:1;">
+            <h4 style="margin:0 0 6px;">${p.name}</h4>
+
+            <p style="
+              font-size:16px;
+              font-weight:bold;
+              color:#0d6efd;
+              margin:0 0 10px;
+            ">
+              $${p.price}
+            </p>
+
+            <div style="
+              display:flex;
+              align-items:center;
+              gap:12px;
+              margin:10px 0;
+            ">
+              <button onclick="updateQty(${p.id}, ${p.qty - 1})" style="
+                width:34px;
+                height:34px;
+                border-radius:50%;
+                border:none;
+                background:#0d6efd;
+                color:white;
+                font-size:18px;
+                cursor:pointer;
+              ">−</button>
+
+              <span style="font-size:16px; font-weight:bold;">
+                ${p.qty}
+              </span>
+
+              <button onclick="updateQty(${p.id}, ${p.qty + 1})" style="
+                width:34px;
+                height:34px;
+                border-radius:50%;
+                border:none;
+                background:#0d6efd;
+                color:white;
+                font-size:18px;
+                cursor:pointer;
+              ">+</button>
+            </div>
+
+            <p style="margin:6px 0;">
+              Subtotal: <b>$${p.price * p.qty}</b>
+            </p>
+
+            <button onclick="removeItem(${p.id})" style="
+              margin-top:10px;
+              padding:6px 14px;
+              background:#dc3545;
+              color:white;
+              border:none;
+              border-radius:6px;
+              cursor:pointer;
+            ">
+              Remove
+            </button>
+          </div>
+
+        </div>
+      `;
+    });
+
+    document.getElementById("total").innerHTML = `
+      <div style="
+        text-align:center;
+        font-size:22px;
+        font-weight:bold;
+        margin:20px 0;
+      ">
+        Total: $${total}
+      </div>
+    `;
+
+  } catch {
+    alert("Failed to load cart");
+  }
+}
+
+loadCart();
+
+// REMOVE ITEM
+function removeItem(id) {
+  if (!confirm("Remove this item from cart?")) return;
+
+  fetch("/cart/" + id, { method: "DELETE" })
+    .then(() => loadCart());
+}
+
+// UPDATE QTY
+function updateQty(id, qty) {
+  if (qty < 1) return;
+
+  fetch("/cart/" + id, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ qty })
+  }).then(() => loadCart());
+}
+</script>
+
+</body>
+</html>

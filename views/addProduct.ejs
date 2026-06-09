@@ -1,0 +1,13 @@
+<% layout('layout') %>
+
+<h2>Add Product</h2>
+
+<form method="POST" action="/addproduct">
+  <input type="text" name="name" placeholder="Phone Name" required><br><br>
+  <input type="text" name="image" placeholder="Image Path (/images/...)" required><br><br>
+  <input type="number" name="price" placeholder="Price" required><br><br>
+  <button>Add Product</button>
+</form>
+
+<br>
+<a href="/">Go back</a>

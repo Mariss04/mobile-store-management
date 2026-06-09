@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1767603667437,
+    "name": "iPhone 13 mini",
+    "image": "https://github.com/alibabacloud-howto/solution-mongodb-labs/raw/main/e-commerce-application/images/iphone-13-mini-blue-select-2021.png",
+    "price": 60000
+  },
+  {
+    "id": 1767606963702,
+    "name": "iphone 17",
+    "image": "/images/iphone-171.jpg",
+    "price": 105000
+  },
+  {
+    "id": 1767603711568,
+    "name": "iPhone 13",
+    "image": "https://github.com/alibabacloud-howto/solution-mongodb-labs/raw/main/e-commerce-application/images/iphone-13-family-select-2021.jpeg",
+    "price": 70000
+  },
+  {
+    "id": 1767603748696,
+    "name": "iPhone 13 pro",
+    "image": "https://github.com/alibabacloud-howto/solution-mongodb-labs/raw/main/e-commerce-application/images/iphone-13-pro-blue-select.png",
+    "price": 80000
+  },
+  {
+    "id": 1767603792895,
+    "name": "iPhone 13 pro max",
+    "image": "https://github.com/alibabacloud-howto/solution-mongodb-labs/raw/main/e-commerce-application/images/iphone-13-pro-max-gold-select.png",
+    "price": 95000
+  },
+  {
+    "id": 1767795424032,
+    "name": "iphone 16",
+    "image": "/images/iphone-161.jpg",
+    "price": 60000
+  }
+]
