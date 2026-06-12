@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Mobile Store Management System
 
 ## Overview
